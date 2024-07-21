@@ -89,13 +89,16 @@ public class TestCases {
     @FindBy(xpath = "//span[text()='Submit']")
     WebElement SubmitBtn;
 
+    @FindBy(xpath = "//div[@class='vHW8K' and text()='Thanks for your response, Automation Wizard!']")
+    WebElement FormResponsePage;
+
     @Test
     public void TestCase() throws InterruptedException {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         NavigateToUrl();
-        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(20));
+        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(30));
         wait.until(ExpectedConditions.elementToBeClickable(NameEle));        
-        NameField(NameEle,"Suraj Sahu");
+        NameField(NameEle,"Crio Learner");
         long epoach = EpoachConvertor();
         NameField(QuestionForAutomation,"I want to be the best QA Engineer! " + epoach);
         js.executeScript("window.scrollBy(0,300);");
@@ -119,6 +122,9 @@ public class TestCases {
         t1.sendKeys("07");
         t2.sendKeys("30");
         SubmitBtn.click();
+        wait.until(ExpectedConditions.elementToBeClickable(FormResponsePage));
+        String ThanksFormResponse = FormResponsePage.getText();
+        System.out.println(ThanksFormResponse);
     }
 
     static Boolean status = false;
