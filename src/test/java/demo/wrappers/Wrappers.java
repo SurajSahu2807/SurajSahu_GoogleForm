@@ -16,4 +16,18 @@ public class Wrappers {
     /*
      * Write your selenium wrappers here
      */
+    public static Boolean Wrap_SendKeys(WebElement ele,String keys){
+        try{
+            ele.sendKeys(keys);
+            return true;
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void Click(WebElement ss){
+        ss.click();
+    }
+
 }
