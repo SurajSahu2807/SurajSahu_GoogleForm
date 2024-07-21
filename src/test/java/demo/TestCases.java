@@ -108,7 +108,7 @@ public class TestCases {
             }
         }
         for(int i=0;i<CoursesEle.size();i++){
-            if(CoursesEle.get(i).getText().equals("Selenium")){
+            if(CoursesEle.get(i).getText().equals("Selenium") || CoursesEle.get(i).getText().equals("Java") || CoursesEle.get(i).getText().equals("TestNG") ){
                 CoursesEleBtn.get(i).click();
             }
         }
@@ -146,10 +146,10 @@ public class TestCases {
         return epoch;
     }
 
-    @AfterTest(enabled = true)
+    @AfterTest(enabled = false)
     public void endTest()
     {
-        // System.out.println("End Test: TestCases");
+        System.out.println("End Test: TestCases");
         driver.quit();
 
     }
