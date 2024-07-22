@@ -5,12 +5,14 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
@@ -27,8 +29,6 @@ public class TestCases {
      * TODO: Write your tests here with testng @Test annotation. 
      * Follow `testCase01` `testCase02`... format or what is provided in instructions
      */
-
-     
     /*
      * Do not change the provided methods unless necessary, they will help in automation and assessment
      */
@@ -50,10 +50,10 @@ public class TestCases {
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         PageFactory.initElements(driver, this);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
     }
 
-       @FindBy(xpath = "//*[@id='mG61Hd']/div[2]/div/div[2]/div[1]/div/div/div[2]/div/div[1]/div/div[1]/input")
+    @FindBy(xpath = "//*[@id='mG61Hd']/div[2]/div/div[2]/div[1]/div/div/div[2]/div/div[1]/div/div[1]/input")
     WebElement NameEle;
 
     @FindBy(xpath = "//*[@id='mG61Hd']/div[2]/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/textarea")
@@ -74,7 +74,7 @@ public class TestCases {
     @FindBy(xpath = "//span[@class='vRMGwf oJeWuf' and text()='Choose']")
     WebElement addressEle;
 
-    @FindBy(xpath = "(//span[text()='Ms'])[2]")
+    @FindBy(xpath = "(//span[text()='Mrs'])[2]")
     WebElement addressOpt;
 
     @FindBy(xpath = "//div[@class='aXBtI Wic03c' and 'Xb9hP']//input[@type='date']")
@@ -96,8 +96,6 @@ public class TestCases {
     public void TestCase() throws InterruptedException {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         NavigateToUrl();
-        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(30));
-        wait.until(ExpectedConditions.elementToBeClickable(NameEle));        
         NameField(NameEle,"Crio Learner");
         long epoach = EpoachConvertor();
         NameField(QuestionForAutomation,"I want to be the best QA Engineer! " + epoach);
@@ -112,19 +110,18 @@ public class TestCases {
                 CoursesEleBtn.get(i).click();
             }
         }
-        addressEle.click();
-        wait.until(ExpectedConditions.elementToBeClickable(addressOpt));
+        Actions actions = new Actions(driver);
+        actions.moveToElement(addressEle).click().build().perform();
+        addressOpt.click();
         addressOpt.click();
         js.executeScript("window.scrollBy(0,300);");
-        wait.until(ExpectedConditions.elementToBeClickable(CalenderEle));
         CalenderEle.sendKeys("23032024");
         js.executeScript("window.scrollBy(0,300);");
         t1.sendKeys("07");
         t2.sendKeys("30");
         SubmitBtn.click();
-        wait.until(ExpectedConditions.elementToBeClickable(FormResponsePage));
         String ThanksFormResponse = FormResponsePage.getText();
-        System.out.println(ThanksFormResponse);
+        Assert.assertEquals(ThanksFormResponse, "Thanks for your response, Automation Wizard!");
     }
 
     static Boolean status = false;
@@ -149,8 +146,6 @@ public class TestCases {
     @AfterTest(enabled = false)
     public void endTest()
     {
-        System.out.println("End Test: TestCases");
         driver.quit();
-
     }
 }
