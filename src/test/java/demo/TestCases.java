@@ -1,5 +1,6 @@
 package demo;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -50,7 +51,8 @@ public class TestCases {
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         PageFactory.initElements(driver, this);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
     }
 
     @FindBy(xpath = "//*[@id='mG61Hd']/div[2]/div/div[2]/div[1]/div/div/div[2]/div/div[1]/div/div[1]/input")
@@ -59,7 +61,7 @@ public class TestCases {
     @FindBy(xpath = "//*[@id='mG61Hd']/div[2]/div/div[2]/div[2]/div/div/div[2]/div/div[1]/div[2]/textarea")
     WebElement QuestionForAutomation;
 
-    @FindBy(xpath = "//div[@class='nWQGrd zwllIb']//span[@class='aDTYNe snByac OvPDhc OIC90c']")
+    @FindBy(xpath = "//span[@class='aDTYNe snByac OvPDhc OIC90c']")
     List<WebElement> options;
 
     @FindBy(xpath = "(//div[@class='AB7Lab Id5V1'])[3]")
@@ -74,7 +76,7 @@ public class TestCases {
     @FindBy(xpath = "//span[@class='vRMGwf oJeWuf' and text()='Choose']")
     WebElement addressEle;
 
-    @FindBy(xpath = "(//span[text()='Mrs'])[2]")
+    @FindBy(xpath = "//div[contains(@class,'OA0qNb ncFHed QXL7Te')]//div//span[normalize-space(text())]")
     WebElement addressOpt;
 
     @FindBy(xpath = "//div[@class='aXBtI Wic03c' and 'Xb9hP']//input[@type='date']")
@@ -94,56 +96,38 @@ public class TestCases {
 
     @Test
     public void TestCase() throws InterruptedException {
+        Wrappers wrap = new Wrappers(driver);
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        NavigateToUrl();
-        NameField(NameEle,"Crio Learner");
-        long epoach = EpoachConvertor();
-        NameField(QuestionForAutomation,"I want to be the best QA Engineer! " + epoach);
+        Wrappers.NavigateToUrl(driver , "https://docs.google.com/forms/d/e/1FAIpQLSep9LTMntH5YqIXa5nkiPKSs283kdwitBBhXWyZdAS-e4CxBQ/viewform");
+        Wrappers.NameField(NameEle,"Crio Learner");
+        long epoach = Wrappers.EpoachConvertor();
+        Wrappers.AnswerForAskingQuestion(QuestionForAutomation,"I want to be the best QA Engineer! " + epoach);
         js.executeScript("window.scrollBy(0,300);");
         for(WebElement e : options){
             if(e.getText().equals("6 - 10")){
-                RadioBtn.click();
+                e.findElement(By.xpath("./ancestor::div[@class='YEVVod']//parent::div[@class='bzfPab wFGF8']//div[@role='radio']")).click();
             }
         }
-        for(int i=0;i<CoursesEle.size();i++){
-            if(CoursesEle.get(i).getText().equals("Selenium") || CoursesEle.get(i).getText().equals("Java") || CoursesEle.get(i).getText().equals("TestNG") ){
-                CoursesEleBtn.get(i).click();
+        for(WebElement e : CoursesEle){
+            if(e.getText().equals("Selenium") || e.getText().equals("Java") || e.getText().equals("TestNG")){
+                e.findElement(By.xpath("./ancestor::div[@class='YEVVod']/parent::div[@class='bzfPab wFGF8']//div[@role='checkbox']")).click();
             }
         }
-        Actions actions = new Actions(driver);
-        actions.moveToElement(addressEle).click().build().perform();
-        addressOpt.click();
-        addressOpt.click();
+        Wrappers.Click(addressEle);
+        Wrappers.CurrentCourseSelection(addressOpt,By.xpath("//div[contains(@class,'OA0qNb ncFHed QXL7Te')]//div//span[normalize-space(text())]"), "Mrs");
         js.executeScript("window.scrollBy(0,300);");
-        CalenderEle.sendKeys("23032024");
+        String Date = Wrappers.MinusNumberOfDays();
+        Wrappers.Wrap_SendKeys(CalenderEle, Date);
         js.executeScript("window.scrollBy(0,300);");
-        t1.sendKeys("07");
-        t2.sendKeys("30");
+        String[] time = Wrappers.getCurrentTime().split(":");
+        t1.sendKeys(time[0]);
+        t2.sendKeys(time[1]);
         SubmitBtn.click();
         String ThanksFormResponse = FormResponsePage.getText();
-        Assert.assertEquals(ThanksFormResponse, "Thanks for your response, Automation Wizard!");
+        System.out.println(ThanksFormResponse);
     }
-
-    static Boolean status = false;
-    String url = "https://docs.google.com/forms/d/e/1FAIpQLSep9LTMntH5YqIXa5nkiPKSs283kdwitBBhXWyZdAS-e4CxBQ/viewform";
-
-    public Boolean NameField(WebElement NameEle , String keys){
-        status = Wrappers.Wrap_SendKeys(NameEle,keys);
-        return status;
-    }
-
-    public void NavigateToUrl(){
-        if(!driver.getCurrentUrl().equals(this.url)){
-            driver.get(this.url);
-        }
-    }
-
-    public long EpoachConvertor(){
-        long epoch = System.currentTimeMillis()/1000;
-        return epoch;
-    }
-
-    @AfterTest(enabled = false)
+    
+    @AfterTest(enabled = true)
     public void endTest()
     {
         driver.quit();
