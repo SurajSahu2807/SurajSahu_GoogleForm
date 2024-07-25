@@ -88,8 +88,6 @@ public class Wrappers {
     }
 
     public static void CurrentCourseSelection(WebElement ss , By locator,String CourseName){
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
-        wait.until(ExpectedConditions.elementToBeClickable(ss));
         List<WebElement> allElemenents = driver.findElements(locator);
         for(WebElement ele : allElemenents){
             if(ele.getText().equals(CourseName)){

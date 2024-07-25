@@ -124,7 +124,7 @@ public class TestCases {
         t2.sendKeys(time[1]);
         SubmitBtn.click();
         String ThanksFormResponse = FormResponsePage.getText();
-        System.out.println(ThanksFormResponse);
+        Assert.assertEquals("Thanks for your response, Automation Wizard!", ThanksFormResponse);
     }
     
     @AfterTest(enabled = true)
