@@ -44,6 +44,7 @@ public class Wrappers {
         LocalDate returnvalue = date.minusDays(7);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String dateString = returnvalue.format(formatter);
+        System.out.println("This date is 7 days less from the current date : " +dateString);
         return dateString;
     }
 
@@ -51,6 +52,7 @@ public class Wrappers {
         LocalTime currentTime = LocalTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         String timeString = currentTime.format(formatter);
+        System.out.println("Current time : " + timeString);
         return timeString;
     }
 
@@ -87,7 +89,9 @@ public class Wrappers {
         }
     }
 
-    public static void CurrentCourseSelection(WebElement ss , By locator,String CourseName){
+    public static void AddressedIntial(WebElement ss , By locator,String CourseName){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+        wait.until(ExpectedConditions.elementToBeClickable(ss));
         List<WebElement> allElemenents = driver.findElements(locator);
         for(WebElement ele : allElemenents){
             if(ele.getText().equals(CourseName)){

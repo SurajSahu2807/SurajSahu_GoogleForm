@@ -95,36 +95,49 @@ public class TestCases {
     WebElement FormResponsePage;
 
     @Test
-    public void TestCase() throws InterruptedException {
+    public void testCase01() throws InterruptedException {
         Wrappers wrap = new Wrappers(driver);
         JavascriptExecutor js = (JavascriptExecutor) driver;
+        // Navigating to url
         Wrappers.NavigateToUrl(driver , "https://docs.google.com/forms/d/e/1FAIpQLSep9LTMntH5YqIXa5nkiPKSs283kdwitBBhXWyZdAS-e4CxBQ/viewform");
+        //Providing learners name
         Wrappers.NameField(NameEle,"Crio Learner");
+        // EpoachConvertor implementation
         long epoach = Wrappers.EpoachConvertor();
+        // Appending epoach value with the Answer For Asking Question
         Wrappers.AnswerForAskingQuestion(QuestionForAutomation,"I want to be the best QA Engineer! " + epoach);
+        //scroll down implementation
         js.executeScript("window.scrollBy(0,300);");
+        // Implementation for selection of number of years of experience
         for(WebElement e : options){
             if(e.getText().equals("6 - 10")){
                 e.findElement(By.xpath("./ancestor::div[@class='YEVVod']//parent::div[@class='bzfPab wFGF8']//div[@role='radio']")).click();
             }
         }
+        // Implementation for selection of courses 
         for(WebElement e : CoursesEle){
             if(e.getText().equals("Selenium") || e.getText().equals("Java") || e.getText().equals("TestNG")){
                 e.findElement(By.xpath("./ancestor::div[@class='YEVVod']/parent::div[@class='bzfPab wFGF8']//div[@role='checkbox']")).click();
             }
         }
         Wrappers.Click(addressEle);
-        Wrappers.CurrentCourseSelection(addressOpt,By.xpath("//div[contains(@class,'OA0qNb ncFHed QXL7Te')]//div//span[normalize-space(text())]"), "Mrs");
+        // Implementation for selecting the address intial from dropdown
+        Wrappers.AddressedIntial(addressOpt,By.xpath("//div[contains(@class,'OA0qNb ncFHed QXL7Te')]//div//span[normalize-space(text())]"), "Mrs");
         js.executeScript("window.scrollBy(0,300);");
+        // Implementation for subtracting no.of days from current day
         String Date = Wrappers.MinusNumberOfDays();
+        // Sendkeys implementation
         Wrappers.Wrap_SendKeys(CalenderEle, Date);
         js.executeScript("window.scrollBy(0,300);");
         String[] time = Wrappers.getCurrentTime().split(":");
+        // Implementation for timing
         t1.sendKeys(time[0]);
         t2.sendKeys(time[1]); 
         SubmitBtn.click();
+        // Printing the thanks form response
         String ThanksFormResponse = FormResponsePage.getText();
         Assert.assertEquals("Thanks for your response, Automation Wizard!", ThanksFormResponse);
+        System.out.println(ThanksFormResponse);
     }
     
     @AfterTest(enabled = true)
