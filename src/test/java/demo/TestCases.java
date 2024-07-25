@@ -121,7 +121,7 @@ public class TestCases {
         js.executeScript("window.scrollBy(0,300);");
         String[] time = Wrappers.getCurrentTime().split(":");
         t1.sendKeys(time[0]);
-        t2.sendKeys(time[1]);
+        t2.sendKeys(time[1]); 
         SubmitBtn.click();
         String ThanksFormResponse = FormResponsePage.getText();
         Assert.assertEquals("Thanks for your response, Automation Wizard!", ThanksFormResponse);
